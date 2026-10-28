@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculatrice REST – SEG 3502</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="conteneur">
+    <header class="entete">
+      <span class="etiquette">SEG 3502 · Laboratoire 6</span>
+      <h1>Calculatrice REST</h1>
+      <p>Service Web développé avec Kotlin et Spring Boot.</p>
+    </header>
+
+    <section class="panneau" aria-labelledby="titre-operations">
+      <h2 id="titre-operations">Opérations disponibles</h2>
+      <p class="introduction">
+        Sélectionnez une opération pour afficher un résultat d'exemple.
+      </p>
+
+      <div class="grille">
+        <article class="carte">
+          <div class="symbole">+</div>
+          <h3>Addition</h3>
+          <p>12 + 8 = 20</p>
+          <a href="/calculator/add/12/8" target="_blank" rel="noopener">
+            Essayer l'addition
+          </a>
+        </article>
+
+        <article class="carte">
+          <div class="symbole">−</div>
+          <h3>Soustraction</h3>
+          <p>12 − 8 = 4</p>
+          <a href="/calculator/subtract/12/8" target="_blank" rel="noopener">
+            Essayer la soustraction
+          </a>
+        </article>
+
+        <article class="carte">
+          <div class="symbole">×</div>
+          <h3>Multiplication</h3>
+          <p>12 × 8 = 96</p>
+          <a href="/calculator/multiply/12/8" target="_blank" rel="noopener">
+            Essayer la multiplication
+          </a>
+        </article>
+
+        <article class="carte">
+          <div class="symbole">÷</div>
+          <h3>Division</h3>
+          <p>12 ÷ 8 = 1,5</p>
+          <a href="/calculator/divide/12/8" target="_blank" rel="noopener">
+            Essayer la division
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <footer class="pied">
+      <p>Pour tester d'autres nombres et consulter les routes de l'API :</p>
+      <a class="bouton" href="/swagger-ui/index.html">Ouvrir Swagger UI</a>
+      <a class="lien" href="/v3/api-docs">
+        Documentation OpenAPI (JSON)
+      </a>
+    </footer>
+  </main>
+</body>
+</html>

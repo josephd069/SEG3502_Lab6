@@ -1,0 +1,106 @@
+
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #203354;
+  background: #f0f5fc;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+.conteneur {
+  width: min(100% - 32px, 960px);
+  margin: 52px auto;
+  text-align: center;
+}
+
+.entete { margin-bottom: 30px; }
+
+.etiquette {
+  display: inline-block;
+  padding: 8px 14px;
+  background: #dce9fb;
+  color: #21518c;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+h1 { font-size: 38px; margin: 18px 0 10px; color: #1b487c; }
+h2 { margin: 0 0 8px; font-size: 24px; }
+h3 { margin: 12px 0 8px; }
+p { line-height: 1.5; }
+
+.entete p, .introduction, .pied p {
+  color: #5a6a80;
+}
+
+.panneau {
+  background: white;
+  border: 1px solid #dfebf9;
+  border-radius: 20px;
+  padding: 34px;
+  box-shadow: 0 12px 36px rgba(24, 57, 104, 0.08);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.carte {
+  padding: 25px 18px;
+  background: #f8fbff;
+  border: 1px solid #e1eaf7;
+  border-radius: 14px;
+}
+
+.symbole {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  background: #e5effe;
+  color: #225b9e;
+  border-radius: 12px;
+  font-size: 27px;
+  font-weight: bold;
+}
+
+.carte p {
+  margin-bottom: 22px;
+  color: #657387;
+}
+
+.carte a, .bouton {
+  display: inline-block;
+  padding: 11px 17px;
+  border-radius: 9px;
+  color: white;
+  background: #3166a9;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.carte a:hover, .bouton:hover {
+  background: #224b80;
+}
+
+.pied { padding: 20px 0 0; }
+
+.lien {
+  display: block;
+  margin-top: 16px;
+  color: #3166a9;
+}
+
+@media (max-width: 620px) {
+  .conteneur { margin: 26px auto; }
+  h1 { font-size: 30px; }
+  .panneau { padding: 22px 16px; }
+  .grille { grid-template-columns: 1fr; }
+}
