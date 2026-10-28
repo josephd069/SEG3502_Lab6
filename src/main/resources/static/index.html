@@ -4,69 +4,193 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculatrice REST – SEG 3502</title>
+  <meta name="theme-color" content="#101d3c">
+  <title>Calculatrice REST | Laboratoire 6</title>
   <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <main class="conteneur">
-    <header class="entete">
-      <span class="etiquette">SEG 3502 · Laboratoire 6</span>
-      <h1>Calculatrice REST</h1>
-      <p>Service Web développé avec Kotlin et Spring Boot.</p>
+  <div class="page">
+    <header class="navigation">
+      <a href="/" class="marque">
+        <span class="marque-icone">∑</span>
+        <span>SEG 3502 <small>LABORATOIRE 06</small></span>
+      </a>
+      <a class="nav-lien" href="/swagger-ui/index.html"
+         target="_blank" rel="noopener">
+        Explorer l'API ↗
+      </a>
     </header>
 
-    <section class="panneau" aria-labelledby="titre-operations">
-      <h2 id="titre-operations">Opérations disponibles</h2>
-      <p class="introduction">
-        Sélectionnez une opération pour afficher un résultat d'exemple.
-      </p>
+    <main>
+      <section class="hero">
+        <span class="hero-cercle cercle-1"></span>
+        <span class="hero-cercle cercle-2"></span>
 
-      <div class="grille">
-        <article class="carte">
-          <div class="symbole">+</div>
-          <h3>Addition</h3>
-          <p>12 + 8 = 20</p>
-          <a href="/calculator/add/12/8" target="_blank" rel="noopener">
-            Essayer l'addition
+        <div class="hero-texte">
+          <span class="surtitre">
+            <span class="point-lumineux"></span>
+            SERVICE WEB REST · SPRING BOOT
+          </span>
+
+          <h1>Les calculs, <span>en toute simplicité.</span></h1>
+
+          <p>
+            Une calculatrice interactive reliée directement à
+            notre API REST. Saisissez deux nombres, choisissez
+            une opération et obtenez votre résultat.
+          </p>
+
+          <div class="technologies">
+            <span>Kotlin</span>
+            <span>Spring Boot</span>
+            <span>OpenAPI</span>
+          </div>
+        </div>
+
+        <div class="hero-illustration" aria-hidden="true">
+          <div class="halo"></div>
+          <div class="carre-calcul">
+            <div class="petit-trait"></div>
+            <div class="nombre-deco">24<span>,</span>0</div>
+            <div class="touches-deco">
+              <i>+</i><i>−</i><i>×</i><i>÷</i>
+            </div>
+          </div>
+          <span class="bulle bulle-plus">+</span>
+          <span class="bulle bulle-mult">×</span>
+        </div>
+      </section>
+
+      <section class="espace-travail">
+        <div class="titre-section">
+          <div>
+            <span class="eyebrow">ESPACE DE CALCUL</span>
+            <h2>Votre calculatrice</h2>
+          </div>
+          <span class="statut-api">
+            <span></span> API locale · port 8080
+          </span>
+        </div>
+
+        <div class="colonnes">
+          <form id="calculator-form" class="panneau saisie" novalidate>
+            <div class="panneau-titre">
+              <span class="numero-etape">01</span>
+              <div>
+                <h3>Paramètres du calcul</h3>
+                <p>Entrez vos valeurs et sélectionnez une opération.</p>
+              </div>
+            </div>
+
+            <div class="champs">
+              <div class="champ">
+                <label for="nombre1">Premier nombre</label>
+                <input id="nombre1" name="nombre1" type="text"
+                       inputmode="decimal" value="12"
+                       autocomplete="off" required>
+              </div>
+
+              <div class="champ">
+                <label for="nombre2">Deuxième nombre</label>
+                <input id="nombre2" name="nombre2" type="text"
+                       inputmode="decimal" value="8"
+                       autocomplete="off" required>
+              </div>
+            </div>
+
+            <div class="selection-titre">Choisir une opération</div>
+
+            <div class="operations" role="group"
+                 aria-label="Opération mathématique">
+              <button class="operation selectionnee" type="button"
+                      data-operation="add" aria-pressed="true">
+                <span>+</span> Addition
+              </button>
+
+              <button class="operation" type="button"
+                      data-operation="subtract" aria-pressed="false">
+                <span>−</span> Soustraction
+              </button>
+
+              <button class="operation" type="button"
+                      data-operation="multiply" aria-pressed="false">
+                <span>×</span> Multiplication
+              </button>
+
+              <button class="operation" type="button"
+                      data-operation="divide" aria-pressed="false">
+                <span>÷</span> Division
+              </button>
+            </div>
+
+            <button class="bouton-calcul" id="calculer" type="submit">
+              Calculer le résultat <span>→</span>
+            </button>
+          </form>
+
+          <div class="panneau resultat" aria-live="polite">
+            <div class="panneau-titre">
+              <span class="numero-etape second">02</span>
+              <div>
+                <h3>Résultat du serveur</h3>
+                <p>Réponse renvoyée par Spring Boot.</p>
+              </div>
+            </div>
+
+            <div class="affichage-resultat">
+              <span class="legende-resultat">RÉSULTAT</span>
+              <strong id="valeur-resultat">—</strong>
+              <span id="formule-resultat" class="formule">12 + 8</span>
+            </div>
+
+            <div class="message-etat" id="message-etat" role="status">
+              Prêt à effectuer un calcul.
+            </div>
+
+            <div class="requete">
+              <div class="requete-titre">
+                <span>REQUÊTE HTTP</span>
+                <span class="methode">GET</span>
+              </div>
+              <code id="chemin-api">/calculator/add/12/8</code>
+            </div>
+
+            <p class="note">
+              Le calcul est effectué sur le serveur,
+              et non dans le navigateur.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="documentation">
+        <div>
+          <span class="eyebrow">POUR ALLER PLUS LOIN</span>
+          <h2>Documentation de l'API</h2>
+          <p>
+            Explorez les points de terminaison et testez les
+            requêtes directement dans Swagger.
+          </p>
+        </div>
+
+        <div class="liens-documentation">
+          <a class="lien-doc principal" href="/swagger-ui/index.html"
+             target="_blank" rel="noopener">
+            Ouvrir Swagger UI ↗
           </a>
-        </article>
-
-        <article class="carte">
-          <div class="symbole">−</div>
-          <h3>Soustraction</h3>
-          <p>12 − 8 = 4</p>
-          <a href="/calculator/subtract/12/8" target="_blank" rel="noopener">
-            Essayer la soustraction
+          <a class="lien-doc secondaire" href="/v3/api-docs"
+             target="_blank" rel="noopener">
+            Voir OpenAPI JSON ↗
           </a>
-        </article>
+        </div>
+      </section>
+    </main>
 
-        <article class="carte">
-          <div class="symbole">×</div>
-          <h3>Multiplication</h3>
-          <p>12 × 8 = 96</p>
-          <a href="/calculator/multiply/12/8" target="_blank" rel="noopener">
-            Essayer la multiplication
-          </a>
-        </article>
-
-        <article class="carte">
-          <div class="symbole">÷</div>
-          <h3>Division</h3>
-          <p>12 ÷ 8 = 1,5</p>
-          <a href="/calculator/divide/12/8" target="_blank" rel="noopener">
-            Essayer la division
-          </a>
-        </article>
-      </div>
-    </section>
-
-    <footer class="pied">
-      <p>Pour tester d'autres nombres et consulter les routes de l'API :</p>
-      <a class="bouton" href="/swagger-ui/index.html">Ouvrir Swagger UI</a>
-      <a class="lien" href="/v3/api-docs">
-        Documentation OpenAPI (JSON)
-      </a>
+    <footer class="pied-page">
+      SEG 3502 — Architecture et conception de logiciels
+      <span>Université d'Ottawa · Laboratoire 6</span>
     </footer>
-  </main>
+  </div>
 </body>
 </html>
