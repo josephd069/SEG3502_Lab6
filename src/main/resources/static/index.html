@@ -3,194 +3,963 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101d3c">
-  <title>Calculatrice REST | Laboratoire 6</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#24282b">
+  <title>Calculatrice REST — SEG 3502</title>
+
+  <style>
+    /* Styles généraux */
+    :root {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #243044;
+      background: #f5f6f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 8% 20%, #ffeed5 0, transparent 32%),
+        radial-gradient(circle at 93% 78%, #dce9ff 0, transparent 30%),
+        #f5f6f9;
+    }
+
+    button, a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 27px 22px 38px;
+    }
+
+    /* En-tête */
+    .barre {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 23px;
+    }
+
+    .identite {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #24282b;
+      color: #ffb951;
+      font-size: 23px;
+      box-shadow: 0 5px 14px #1b202528;
+    }
+
+    .identite small {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      color: #768093;
+    }
+
+    .lien-haut {
+      background: white;
+      border: 1px solid #dfe3eb;
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-size: 13px;
+      font-weight: 750;
+      box-shadow: 0 4px 12px #1f2c4110;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .intro .eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #aa6b19;
+    }
+
+    .intro h1 {
+      font-size: clamp(28px, 5vw, 36px);
+      letter-spacing: -1.3px;
+      margin: 9px 0 8px;
+      color: #202a37;
+    }
+
+    .intro p {
+      font-size: 14px;
+      color: #748093;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Corps de la calculatrice */
+    .calculatrice {
+      width: min(100%, 433px);
+      margin: 0 auto;
+      background: linear-gradient(155deg, #2b3033, #222629);
+      border-radius: 29px;
+      padding: 25px 25px 27px;
+      box-shadow:
+        0 27px 48px #17202e2c,
+        0 7px 13px #17202e12,
+        inset 0 1px #ffffff19;
+    }
+
+    .calculatrice h2 {
+      text-align: center;
+      font-size: 24px;
+      color: #f7f8fa;
+      margin: 1px 0 19px;
+      font-weight: 760;
+      letter-spacing: -0.5px;
+    }
+
+    /* Écran numérique */
+    .ecran {
+      background: #11161b;
+      border: 1px solid #0e1216;
+      border-radius: 15px;
+      min-height: 119px;
+      margin-bottom: 18px;
+      padding: 17px 19px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      box-shadow: inset 0 3px 10px #00000028;
+      overflow: hidden;
+    }
+
+    .expression {
+      color: #8792a1;
+      font-size: 14px;
+      min-height: 19px;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .valeur {
+      color: white;
+      font-size: clamp(34px, 7vw, 49px);
+      font-weight: 400;
+      line-height: 1.17;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1.8px;
+    }
+
+    /* Grille des touches */
+    .touches {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-auto-rows: 72px;
+      gap: 11px;
+    }
+
+    .touche {
+      border: 0;
+      border-radius: 11px;
+      background: #e1e4e9;
+      color: #262c33;
+      font-weight: 750;
+      font-size: 25px;
+      box-shadow:
+        inset 0 1px #ffffff99,
+        0 3px 0 #b2b6bd;
+      transition:
+        transform 0.10s ease,
+        filter 0.10s ease,
+        background 0.12s ease;
+    }
+
+    .touche:hover {
+      filter: brightness(1.055);
+    }
+
+    .touche:active {
+      transform: translateY(2px);
+      box-shadow: inset 0 2px 4px #00000022;
+    }
+
+    .touche:focus-visible,
+    .lien-haut:focus-visible,
+    .doc-link:focus-visible,
+    .signe:focus-visible {
+      outline: 3px solid #55a9ef;
+      outline-offset: 3px;
+    }
+
+    /* Touches de correction */
+    .touche.outil {
+      background: #b9c0ca;
+      color: #2d363f;
+    }
+
+    /* Touches orange */
+    .touche.operateur,
+    .touche.egal {
+      background: #f8b451;
+      color: white;
+      font-size: 30px;
+      box-shadow:
+        inset 0 1px #ffffff66,
+        0 3px 0 #c9892f;
+    }
+
+    .touche.active {
+      background: #ffd18a;
+      color: #693b02;
+      outline: 2px solid #ffe4b8;
+      outline-offset: -2px;
+    }
+
+    .touche.zero {
+      grid-column: span 2;
+    }
+
+    .touche.egal {
+      grid-row: span 2;
+    }
+
+    .aide-signe {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 2px 0;
+      color: #bdc7d1;
+      font-size: 11px;
+      gap: 12px;
+    }
+
+    .signe {
+      color: #f8b451;
+      border: 1px solid #636b73;
+      background: #343a3f;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    /* Message d'état */
+    .etat {
+      width: min(100%, 433px);
+      margin: 14px auto 0;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: white;
+      border: 1px solid #e3e6ec;
+      color: #5f6b7b;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 46px;
+      box-shadow: 0 4px 12px #202b3810;
+    }
+
+    .etat::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e9a644;
+      flex-shrink: 0;
+    }
+
+    .etat.succes::before {
+      background: #38b47b;
+    }
+
+    .etat.erreur::before {
+      background: #eb6060;
+    }
+
+    .etat.attente::before {
+      background: #5b97df;
+    }
+
+    /* Cartes de documentation */
+    .sous-section {
+      width: min(100%, 433px);
+      margin: 17px auto 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .carte {
+      background: white;
+      border: 1px solid #e1e5ec;
+      border-radius: 14px;
+      padding: 17px 19px;
+      box-shadow: 0 4px 14px #202b380a;
+    }
+
+    .carte .libelle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 9px;
+      color: #758094;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .methode {
+      background: #ddf4e9;
+      color: #238457;
+      border-radius: 5px;
+      padding: 4px 7px;
+      letter-spacing: 0.5px;
+    }
+
+    #route {
+      display: block;
+      color: #29354b;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+      line-height: 1.6;
+    }
+
+    .documentation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .documentation p {
+      font-size: 12px;
+      color: #778296;
+      margin: 5px 0 0;
+      line-height: 1.5;
+    }
+
+    .documentation strong {
+      font-size: 14px;
+      color: #2d3948;
+    }
+
+    .doc-liens {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 13px;
+    }
+
+    .doc-link {
+      background: #262c33;
+      color: white;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .doc-link.secondaire {
+      background: #edf0f5;
+      color: #39485c;
+    }
+
+    footer {
+      margin: 27px 0 0;
+      text-align: center;
+      font-size: 11px;
+      color: #8b96a5;
+    }
+
+    /* Adaptation aux écrans mobiles */
+    @media (max-width: 480px) {
+      .page {
+        padding: 17px 15px 28px;
+      }
+
+      .identite {
+        font-size: 13px;
+      }
+
+      .lien-haut {
+        font-size: 11px;
+        padding: 10px;
+      }
+
+      .intro {
+        margin-bottom: 18px;
+      }
+
+      .intro p {
+        font-size: 12px;
+      }
+
+      .calculatrice {
+        padding: 20px 19px 23px;
+        border-radius: 24px;
+      }
+
+      .touches {
+        grid-auto-rows: min(17vw, 72px);
+        gap: 9px;
+      }
+
+      .touche {
+        font-size: 23px;
+      }
+
+      .touche.operateur,
+      .touche.egal {
+        font-size: 27px;
+      }
+
+      .ecran {
+        min-height: 108px;
+      }
+
+      .aide-signe {
+        font-size: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .touche {
+        transition: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <div class="page">
-    <header class="navigation">
-      <a href="/" class="marque">
-        <span class="marque-icone">∑</span>
-        <span>SEG 3502 <small>LABORATOIRE 06</small></span>
-      </a>
-      <a class="nav-lien" href="/swagger-ui/index.html"
-         target="_blank" rel="noopener">
+
+    <!-- En-tête -->
+    <header class="barre">
+      <div class="identite">
+        <span class="logo" aria-hidden="true">∑</span>
+        <span>
+          SEG 3502
+          <small>LABORATOIRE 06</small>
+        </span>
+      </div>
+
+      <a class="lien-haut"
+         href="/swagger-ui/index.html"
+         target="_blank"
+         rel="noopener">
         Explorer l'API ↗
       </a>
     </header>
 
     <main>
-      <section class="hero">
-        <span class="hero-cercle cercle-1"></span>
-        <span class="hero-cercle cercle-2"></span>
+      <div class="intro">
+        <div class="eyebrow">KOTLIN · SPRING BOOT · REST</div>
+        <h1>Calculatrice interactive</h1>
+        <p>
+          Quatre opérations. Des résultats calculés par notre API REST.
+        </p>
+      </div>
 
-        <div class="hero-texte">
-          <span class="surtitre">
-            <span class="point-lumineux"></span>
-            SERVICE WEB REST · SPRING BOOT
-          </span>
+      <!-- Calculatrice -->
+      <section class="calculatrice" aria-label="Calculatrice REST">
+        <h2>Calculatrice</h2>
 
-          <h1>Les calculs, <span>en toute simplicité.</span></h1>
-
-          <p>
-            Une calculatrice interactive reliée directement à
-            notre API REST. Saisissez deux nombres, choisissez
-            une opération et obtenez votre résultat.
-          </p>
-
-          <div class="technologies">
-            <span>Kotlin</span>
-            <span>Spring Boot</span>
-            <span>OpenAPI</span>
+        <div class="ecran" aria-live="polite" aria-atomic="true">
+          <div class="expression" id="expression">
+            Prête à calculer
           </div>
+          <div class="valeur" id="affichage">0</div>
         </div>
 
-        <div class="hero-illustration" aria-hidden="true">
-          <div class="halo"></div>
-          <div class="carre-calcul">
-            <div class="petit-trait"></div>
-            <div class="nombre-deco">24<span>,</span>0</div>
-            <div class="touches-deco">
-              <i>+</i><i>−</i><i>×</i><i>÷</i>
-            </div>
-          </div>
-          <span class="bulle bulle-plus">+</span>
-          <span class="bulle bulle-mult">×</span>
+        <!-- Touches -->
+        <div class="touches" aria-label="Clavier de la calculatrice">
+
+          <button type="button" class="touche outil"
+                  data-action="clear" aria-label="Effacer tout">C</button>
+
+          <button type="button" class="touche outil"
+                  data-action="backspace"
+                  aria-label="Effacer le dernier chiffre">⌫</button>
+
+          <button type="button" class="touche operateur"
+                  data-operation="divide" aria-label="Division">÷</button>
+
+          <button type="button" class="touche operateur"
+                  data-operation="multiply" aria-label="Multiplication">×</button>
+
+          <button type="button" class="touche" data-digit="7">7</button>
+          <button type="button" class="touche" data-digit="8">8</button>
+          <button type="button" class="touche" data-digit="9">9</button>
+
+          <button type="button" class="touche operateur"
+                  data-operation="subtract" aria-label="Soustraction">−</button>
+
+          <button type="button" class="touche" data-digit="4">4</button>
+          <button type="button" class="touche" data-digit="5">5</button>
+          <button type="button" class="touche" data-digit="6">6</button>
+
+          <button type="button" class="touche operateur"
+                  data-operation="add" aria-label="Addition">+</button>
+
+          <button type="button" class="touche" data-digit="1">1</button>
+          <button type="button" class="touche" data-digit="2">2</button>
+          <button type="button" class="touche" data-digit="3">3</button>
+
+          <button type="button" class="touche egal"
+                  data-action="equals" aria-label="Calculer le résultat">=</button>
+
+          <button type="button" class="touche zero" data-digit="0">0</button>
+
+          <button type="button" class="touche"
+                  data-action="decimal" aria-label="Virgule décimale">.</button>
+        </div>
+
+        <div class="aide-signe">
+          <span>Clavier physique également accepté</span>
+
+          <button type="button" class="signe"
+                  data-action="sign" aria-label="Changer le signe du nombre">
+            ± Changer le signe
+          </button>
         </div>
       </section>
 
-      <section class="espace-travail">
-        <div class="titre-section">
-          <div>
-            <span class="eyebrow">ESPACE DE CALCUL</span>
-            <h2>Votre calculatrice</h2>
+      <!-- Message de l'application -->
+      <div id="etat" class="etat" role="status" aria-live="polite">
+        Prêt à effectuer un calcul.
+      </div>
+
+      <!-- Informations REST -->
+      <div class="sous-section">
+        <section class="carte" aria-label="Dernière requête HTTP">
+          <div class="libelle">
+            REQUÊTE VERS LE SERVEUR
+            <span class="methode">GET</span>
           </div>
-          <span class="statut-api">
-            <span></span> API locale · port 8080
-          </span>
-        </div>
 
-        <div class="colonnes">
-          <form id="calculator-form" class="panneau saisie" novalidate>
-            <div class="panneau-titre">
-              <span class="numero-etape">01</span>
-              <div>
-                <h3>Paramètres du calcul</h3>
-                <p>Entrez vos valeurs et sélectionnez une opération.</p>
-              </div>
+          <code id="route">
+            /calculator/{operation}/{nombre1}/{nombre2}
+          </code>
+        </section>
+
+        <section class="carte" aria-label="Documentation de l'API">
+          <div class="documentation">
+            <div>
+              <strong>Documentation de l'API</strong>
+              <p>
+                Tester les quatre opérations avec Swagger UI
+                ou consulter OpenAPI.
+              </p>
             </div>
-
-            <div class="champs">
-              <div class="champ">
-                <label for="nombre1">Premier nombre</label>
-                <input id="nombre1" name="nombre1" type="text"
-                       inputmode="decimal" value="12"
-                       autocomplete="off" required>
-              </div>
-
-              <div class="champ">
-                <label for="nombre2">Deuxième nombre</label>
-                <input id="nombre2" name="nombre2" type="text"
-                       inputmode="decimal" value="8"
-                       autocomplete="off" required>
-              </div>
-            </div>
-
-            <div class="selection-titre">Choisir une opération</div>
-
-            <div class="operations" role="group"
-                 aria-label="Opération mathématique">
-              <button class="operation selectionnee" type="button"
-                      data-operation="add" aria-pressed="true">
-                <span>+</span> Addition
-              </button>
-
-              <button class="operation" type="button"
-                      data-operation="subtract" aria-pressed="false">
-                <span>−</span> Soustraction
-              </button>
-
-              <button class="operation" type="button"
-                      data-operation="multiply" aria-pressed="false">
-                <span>×</span> Multiplication
-              </button>
-
-              <button class="operation" type="button"
-                      data-operation="divide" aria-pressed="false">
-                <span>÷</span> Division
-              </button>
-            </div>
-
-            <button class="bouton-calcul" id="calculer" type="submit">
-              Calculer le résultat <span>→</span>
-            </button>
-          </form>
-
-          <div class="panneau resultat" aria-live="polite">
-            <div class="panneau-titre">
-              <span class="numero-etape second">02</span>
-              <div>
-                <h3>Résultat du serveur</h3>
-                <p>Réponse renvoyée par Spring Boot.</p>
-              </div>
-            </div>
-
-            <div class="affichage-resultat">
-              <span class="legende-resultat">RÉSULTAT</span>
-              <strong id="valeur-resultat">—</strong>
-              <span id="formule-resultat" class="formule">12 + 8</span>
-            </div>
-
-            <div class="message-etat" id="message-etat" role="status">
-              Prêt à effectuer un calcul.
-            </div>
-
-            <div class="requete">
-              <div class="requete-titre">
-                <span>REQUÊTE HTTP</span>
-                <span class="methode">GET</span>
-              </div>
-              <code id="chemin-api">/calculator/add/12/8</code>
-            </div>
-
-            <p class="note">
-              Le calcul est effectué sur le serveur,
-              et non dans le navigateur.
-            </p>
           </div>
-        </div>
-      </section>
 
-      <section class="documentation">
-        <div>
-          <span class="eyebrow">POUR ALLER PLUS LOIN</span>
-          <h2>Documentation de l'API</h2>
-          <p>
-            Explorez les points de terminaison et testez les
-            requêtes directement dans Swagger.
-          </p>
-        </div>
+          <div class="doc-liens">
+            <a class="doc-link"
+               href="/swagger-ui/index.html"
+               target="_blank" rel="noopener">
+              Swagger UI ↗
+            </a>
 
-        <div class="liens-documentation">
-          <a class="lien-doc principal" href="/swagger-ui/index.html"
-             target="_blank" rel="noopener">
-            Ouvrir Swagger UI ↗
-          </a>
-          <a class="lien-doc secondaire" href="/v3/api-docs"
-             target="_blank" rel="noopener">
-            Voir OpenAPI JSON ↗
-          </a>
-        </div>
-      </section>
+            <a class="doc-link secondaire"
+               href="/v3/api-docs"
+               target="_blank" rel="noopener">
+              OpenAPI JSON ↗
+            </a>
+          </div>
+        </section>
+      </div>
     </main>
 
-    <footer class="pied-page">
-      SEG 3502 — Architecture et conception de logiciels
-      <span>Université d'Ottawa · Laboratoire 6</span>
+    <footer>
+      SEG 3502 · Architecture et conception de logiciels · Université d'Ottawa
     </footer>
   </div>
+
+  <!-- Logique de l'interface et communication REST -->
+  <script>
+    const affichage = document.getElementById('affichage');
+    const expression = document.getElementById('expression');
+    const route = document.getElementById('route');
+    const etat = document.getElementById('etat');
+
+    const symboles = {
+      add: '+',
+      subtract: '−',
+      multiply: '×',
+      divide: '÷'
+    };
+
+    let saisie = '0';
+    let premier = null;
+    let operation = null;
+    let secondCommence = false;
+    let resultatPrecedent = false;
+    let occupe = false;
+
+    // Affichage des messages
+    function annoncer(message, type = '') {
+      etat.textContent = message;
+      etat.className = 'etat ' + type;
+    }
+
+    // Formatage des nombres
+    function afficherValeur(texte) {
+      const n = Number(texte);
+
+      if (texte === '-0') return '−0';
+
+      if (!Number.isFinite(n) || texte.endsWith('.')) {
+        return texte.replace('-', '−').replace('.', ',');
+      }
+
+      return n.toLocaleString('fr-CA', {
+        maximumFractionDigits: 10
+      });
+    }
+
+    // Mise à jour de l'écran
+    function actualiser() {
+      affichage.textContent = afficherValeur(saisie);
+
+      if (operation) {
+        expression.textContent =
+          `${afficherValeur(String(premier))} ${symboles[operation]} ` +
+          `${secondCommence ? afficherValeur(saisie) : ''}`;
+
+      } else if (!resultatPrecedent) {
+        expression.textContent = 'Prête à calculer';
+      }
+
+      document.querySelectorAll('[data-operation]').forEach(b => {
+        const active = b.dataset.operation === operation;
+
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    // Réinitialisation
+    function reinitialiser() {
+      saisie = '0';
+      premier = null;
+      operation = null;
+      secondCommence = false;
+      resultatPrecedent = false;
+
+      route.textContent =
+        '/calculator/{operation}/{nombre1}/{nombre2}';
+
+      annoncer('Prêt à effectuer un calcul.');
+      actualiser();
+    }
+
+    // Saisie d'un chiffre
+    function chiffre(c) {
+      if (occupe) return;
+
+      if (resultatPrecedent && !operation) {
+        reinitialiser();
+      }
+
+      if (operation && !secondCommence) {
+        saisie = '0';
+        secondCommence = true;
+      }
+
+      if (saisie.replace(/[-.]/g, '').length >= 13) return;
+
+      saisie = saisie === '0'
+        ? c
+        : saisie === '-0'
+          ? '-' + c
+          : saisie + c;
+
+      actualiser();
+    }
+
+    // Saisie d'un nombre décimal
+    function decimal() {
+      if (occupe) return;
+
+      if (resultatPrecedent && !operation) {
+        reinitialiser();
+      }
+
+      if (operation && !secondCommence) {
+        saisie = '0';
+        secondCommence = true;
+      }
+
+      if (!saisie.includes('.')) {
+        saisie += '.';
+      }
+
+      actualiser();
+    }
+
+    // Changement du signe
+    function signe() {
+      if (occupe) return;
+
+      if (resultatPrecedent && !operation) {
+        resultatPrecedent = false;
+      }
+
+      if (operation && !secondCommence) {
+        saisie = '0';
+        secondCommence = true;
+      }
+
+      saisie = saisie.startsWith('-')
+        ? saisie.slice(1)
+        : '-' + saisie;
+
+      actualiser();
+    }
+
+    // Suppression du dernier chiffre
+    function effacerDernier() {
+      if (occupe) return;
+
+      if (operation && !secondCommence) {
+        saisie = String(premier);
+        premier = null;
+        operation = null;
+      }
+
+      if (resultatPrecedent && !operation) {
+        resultatPrecedent = false;
+      }
+
+      saisie = saisie.length <= 1 ||
+        (saisie.length === 2 && saisie.startsWith('-'))
+          ? '0'
+          : saisie.slice(0, -1);
+
+      actualiser();
+    }
+
+    // Sélection d'une opération
+    function choisirOperation(op) {
+      if (occupe) return;
+
+      if (operation && secondCommence) {
+        annoncer(
+          'Appuyez sur = pour terminer ce calcul avant d’en choisir un autre.'
+        );
+        return;
+      }
+
+      if (resultatPrecedent) {
+        resultatPrecedent = false;
+      }
+
+      premier = Number(saisie);
+      operation = op;
+      secondCommence = false;
+
+      annoncer('Opération sélectionnée : entrez le deuxième nombre.');
+      actualiser();
+    }
+
+    // Exécution du calcul sur le serveur Spring Boot
+    async function calculer() {
+      if (occupe) return;
+
+      if (!operation || !secondCommence) {
+        annoncer(
+          'Choisissez une opération et saisissez le deuxième nombre.',
+          'erreur'
+        );
+        return;
+      }
+
+      const a = premier;
+      const b = Number(saisie);
+      const op = operation;
+
+      if (!Number.isFinite(a) || !Number.isFinite(b)) {
+        annoncer('Nombres invalides.', 'erreur');
+        return;
+      }
+
+      if (op === 'divide' && b === 0) {
+        annoncer('Division par zéro impossible.', 'erreur');
+        return;
+      }
+
+      // Construction de la requête REST
+      const chemin = `/calculator/${op}/${a}/${b}`;
+
+      route.textContent = chemin;
+      occupe = true;
+
+      annoncer('Requête en cours vers Spring Boot…', 'attente');
+
+      try {
+        // Le calcul est réalisé par le backend Kotlin.
+        const reponse = await fetch(chemin, {
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
+        if (!reponse.ok) {
+          throw new Error(`HTTP ${reponse.status}`);
+        }
+
+        const resultat = Number(await reponse.text());
+
+        if (!Number.isFinite(resultat)) {
+          throw new Error('Résultat non numérique');
+        }
+
+        // Affichage du résultat du serveur
+        saisie = String(resultat);
+
+        expression.textContent =
+          `${afficherValeur(String(a))} ${symboles[op]} ` +
+          `${afficherValeur(String(b))} =`;
+
+        premier = null;
+        operation = null;
+        secondCommence = false;
+        resultatPrecedent = true;
+
+        annoncer(
+          'Résultat reçu du serveur avec succès.',
+          'succes'
+        );
+
+        actualiser();
+
+      } catch (erreur) {
+        annoncer(
+          `Impossible de récupérer le résultat : ${erreur.message}.`,
+          'erreur'
+        );
+
+      } finally {
+        occupe = false;
+      }
+    }
+
+    // Gestion des touches de la calculatrice
+    function action(bouton) {
+      if (bouton.dataset.digit !== undefined) {
+        chiffre(bouton.dataset.digit);
+
+      } else if (bouton.dataset.operation) {
+        choisirOperation(bouton.dataset.operation);
+
+      } else {
+        switch (bouton.dataset.action) {
+          case 'clear':
+            reinitialiser();
+            break;
+
+          case 'backspace':
+            effacerDernier();
+            break;
+
+          case 'decimal':
+            decimal();
+            break;
+
+          case 'sign':
+            signe();
+            break;
+
+          case 'equals':
+            void calculer();
+            break;
+        }
+      }
+    }
+
+    // Événements des boutons
+    document.querySelectorAll('.touche, .signe').forEach(bouton => {
+      bouton.addEventListener('click', () => action(bouton));
+    });
+
+    // Utilisation du clavier physique
+    document.addEventListener('keydown', e => {
+      if (
+        e.ctrlKey ||
+        e.metaKey ||
+        e.altKey ||
+        e.target.matches('input,textarea')
+      ) {
+        return;
+      }
+
+      const k = e.key;
+
+      if (/^[0-9]$/.test(k)) {
+        chiffre(k);
+
+      } else if (k === '.' || k === ',') {
+        decimal();
+
+      } else if (k === '+' || k === '-') {
+        choisirOperation(k === '+' ? 'add' : 'subtract');
+
+      } else if (k === '*' || k.toLowerCase() === 'x') {
+        choisirOperation('multiply');
+
+      } else if (k === '/') {
+        e.preventDefault();
+        choisirOperation('divide');
+
+      } else if (k === 'Enter' || k === '=') {
+        e.preventDefault();
+        void calculer();
+
+      } else if (k === 'Backspace') {
+        e.preventDefault();
+        effacerDernier();
+
+      } else if (k === 'Escape') {
+        reinitialiser();
+      }
+    });
+
+    actualiser();
+  </script>
 </body>
 </html>
